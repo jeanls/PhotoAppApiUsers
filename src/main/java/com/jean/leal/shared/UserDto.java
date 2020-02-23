@@ -1,10 +1,12 @@
 package com.jean.leal.shared;
 
+import com.jean.leal.ui.model.response.AlbumResponseModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +20,5 @@ public class UserDto implements Serializable {
     private String email;
     private String userId;
     private String encryptedPassword;
+    private List<AlbumResponseModel> albums;
 }

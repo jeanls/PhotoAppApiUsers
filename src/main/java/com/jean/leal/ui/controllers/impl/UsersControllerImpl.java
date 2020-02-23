@@ -5,6 +5,7 @@ import com.jean.leal.shared.UserDto;
 import com.jean.leal.ui.controllers.UsersController;
 import com.jean.leal.ui.model.request.CreateUserRequestModel;
 import com.jean.leal.ui.model.response.CreateUserResponseModel;
+import com.jean.leal.ui.model.response.UserResponseModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UsersControllerImpl implements UsersController {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    UserService userService;
+    public UsersControllerImpl(Environment environment, UserService userService, ModelMapper modelMapper) {
+        this.environment = environment;
+        this.userService = userService;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public String status() {
@@ -30,14 +36,18 @@ public class UsersControllerImpl implements UsersController {
 
     @Override
     public ResponseEntity<CreateUserResponseModel> createUser(CreateUserRequestModel createUserRequestModel) {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
         UserDto userDto = modelMapper.map(createUserRequestModel, UserDto.class);
         userDto = userService.createUser(userDto);
 
         CreateUserResponseModel responseModel = modelMapper.map(userDto, CreateUserResponseModel.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseModel);
+    }
+
+    @Override
+    public ResponseEntity<UserResponseModel> getUser(String userId) {
+        UserDto userDto = userService.getUserByUserId(userId);
+        UserResponseModel returnValue = modelMapper.map(userDto, UserResponseModel.class);
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 }
