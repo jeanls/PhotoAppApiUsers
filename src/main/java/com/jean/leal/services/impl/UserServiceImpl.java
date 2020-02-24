@@ -7,6 +7,7 @@ import com.jean.leal.services.UserService;
 import com.jean.leal.shared.UserDto;
 import com.jean.leal.ui.model.response.AlbumResponseModel;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -63,7 +65,9 @@ public class UserServiceImpl implements UserService {
 //        ResponseEntity<List<AlbumResponseModel>> responseEntity =
 ////                restTemplate.exchange(String.format(Objects.requireNonNull(environment.getProperty("albums.url")), userId), HttpMethod.GET, null,
 ////                        new ParameterizedTypeReference<List<AlbumResponseModel>>() {});
+        log.info("Before calling albums microservice");
         List<AlbumResponseModel> albums = albumsServiceClient.getAlbums(userId);
+        log.info("After calling albums microservice");
         userDto.setAlbums(albums);
         return userDto;
     }
