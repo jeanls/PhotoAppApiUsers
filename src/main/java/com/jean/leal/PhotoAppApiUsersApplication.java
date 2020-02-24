@@ -1,6 +1,5 @@
 package com.jean.leal;
 
-import com.jean.leal.shared.FeignErrorDecoder;
 import feign.Logger;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
