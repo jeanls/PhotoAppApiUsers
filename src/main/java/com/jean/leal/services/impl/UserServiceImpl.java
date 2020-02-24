@@ -1,5 +1,6 @@
 package com.jean.leal.services.impl;
 
+import com.jean.leal.data.AlbumsServiceClient;
 import com.jean.leal.data.UserEntity;
 import com.jean.leal.repositories.UserRepository;
 import com.jean.leal.services.UserService;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
     final ModelMapper modelMapper;
     final RestTemplate restTemplate;
     final Environment environment;
+    final AlbumsServiceClient albumsServiceClient;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -64,10 +66,10 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = modelMapper.map(userEntity, UserDto.class);
 
-        ResponseEntity<List<AlbumResponseModel>> responseEntity =
-                restTemplate.exchange(String.format(Objects.requireNonNull(environment.getProperty("albums.url")), userId), HttpMethod.GET, null,
-                        new ParameterizedTypeReference<List<AlbumResponseModel>>() {});
-        List<AlbumResponseModel> albums = responseEntity.getBody();
+//        ResponseEntity<List<AlbumResponseModel>> responseEntity =
+////                restTemplate.exchange(String.format(Objects.requireNonNull(environment.getProperty("albums.url")), userId), HttpMethod.GET, null,
+////                        new ParameterizedTypeReference<List<AlbumResponseModel>>() {});
+        List<AlbumResponseModel> albums = albumsServiceClient.getAlbums(userId);
         userDto.setAlbums(albums);
         return userDto;
     }
